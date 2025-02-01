@@ -1,6 +1,8 @@
 package net.engineeringdigest.journalApp.controller;
 
 import net.engineeringdigest.journalApp.entity.JournalEntry;
+import net.engineeringdigest.journalApp.service.JournalEntryService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -13,21 +15,13 @@ import java.util.Map;
 @RequestMapping("/journal")
 public class journeyEntryController {
 
-    private Map< Long ,JournalEntry> journalentries = new HashMap<>();
-
-    @GetMapping("/all")
-    public List<JournalEntry> getAll(){
-        return new ArrayList<>(journalentries.values());
-    }
+    @Autowired
+    private JournalEntryService journalEntryService;
 
     @PostMapping("/add")
-    public boolean createEntry(@RequestBody JournalEntry myEntry){
-        journalentries.put(myEntry.getId(), myEntry);
-        return true;
+    public JournalEntry createEntry(@RequestBody JournalEntry myEntry){
+        journalEntryService.saveEntry(myEntry);
+        System.out.println("Create Request received");
+        return myEntry;
     }
-    @GetMapping("id/{myId}")
-    public JournalEntry getJournalById(@PathVariable Long myId){
-        return journalentries.get(myId);
-    }
-
 }
